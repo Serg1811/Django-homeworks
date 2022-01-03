@@ -1,5 +1,10 @@
+import csv
+
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse
+
+from app.settings import BUS_STATION_CSV
 
 
 def index(request):
@@ -7,13 +12,15 @@ def index(request):
 
 
 def bus_stations(request):
-    current_page = 1
-    next_page_url = 'write your url'
-    return render(request, 'index.html', context={
-        'bus_stations': [{'Name': 'название', 'Street': 'улица', 'District': 'район'},
-                         {'Name': 'другое название', 'Street': 'другая улица', 'District': 'другой район'}],
-        'current_page': current_page,
-        'prev_page_url': None,
-        'next_page_url': next_page_url,
-    })
+    with open(BUS_STATION_CSV) as f:
+        reader = csv.DictReader(f)
+        stations_info = []
+        for row in reader:
+            stations_info += [{'Name': row['Name'], 'Street': row['Street'], 'District': row['District']}]
+    paginator = Paginator(stations_info, 10)
+    current_page = request.GET.get('page', 1)
+    page = paginator.get_page(current_page)
+    context = {'page': page}
+    return render(request, 'index.html', context=context)
+
 
