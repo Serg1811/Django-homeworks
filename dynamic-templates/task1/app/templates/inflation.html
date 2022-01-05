@@ -10,6 +10,12 @@
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--<style type="text/css">-->
+       <!--TD {-->
+        <!--background: #fc0; /* Цвет фона */-->
+        <!--empty-cells: initial '-'; /* Прячем пустые ячейки */-->
+         <!--}-->
+    <!--</style>-->
   </head>
 
   <body>
@@ -18,8 +24,48 @@
         <h1 class="col s12">Инфляция в России</h1>
         <div class="col s12 m8">
         
-        <!-- Ваша логика -->
+          <!-- Ваша логика -->
 
+          <table class="u-full-width">
+            <thead>
+              <tr>
+                {% for name in headers %}
+                  <th>{{ name }}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in rows %}
+                <tr>
+                  {% for value in row %}
+                    {% if forloop.last %}
+                      <td BGCOLOR=Gray>
+                    {% elif not forloop.first and value != '' %}
+                      {% if value < 0 %}
+                        <td BGCOLOR=Green>
+                      {% elif value < 1 %}
+                        <td>
+                      {% elif value < 2 %}
+                        <td BGCOLOR=LightSalmon>
+                      {% elif value < 5 %}
+                        <td BGCOLOR=IndianRed>
+                      {% else %}
+                        <td BGCOLOR=Red>
+                      {% endif %}
+                    {% else %}
+                      <td>
+                    {% endif %}
+                    {% if value == ''  %}
+                      -
+                    {% else %}
+                      {{ value }}
+                    {% endif %}
+                      </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     {% endblock %}
