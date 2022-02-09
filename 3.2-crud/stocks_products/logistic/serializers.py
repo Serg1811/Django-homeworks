@@ -41,7 +41,7 @@ class StockSerializer(serializers.ModelSerializer):
                 product_id=position['product'].id,
                 quantity=position['quantity'],
                 price=position['price'],
-                defaults={'quantity': position['quantity'], 'price': position['price']})
+            )
         return stock
 
     def update(self, instance, validated_data):
