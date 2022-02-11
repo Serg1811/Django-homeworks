@@ -5,8 +5,6 @@ class IsAuthenticatedOrOwnerOrReadOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
         method = request.method
         user = request.user
-        print(method)
-        print(user, '__', obj.creator)
         if method in SAFE_METHODS:
             return True
         elif method == 'POST':

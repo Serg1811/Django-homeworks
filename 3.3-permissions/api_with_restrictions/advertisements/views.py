@@ -1,3 +1,5 @@
+from django.db.models import Q
+from django.contrib.auth.models import AnonymousUser
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from rest_framework.viewsets import ModelViewSet
@@ -19,6 +21,13 @@ class AdvertisementViewSet(ModelViewSet):
     filterset_class = AdvertisementFilter
     throttle_classes = [AnonRateThrottle, UserRateThrottle]
     permission_classes = [IsAuthenticatedOrOwnerOrReadOnly]
+
+    def get_queryset(self):
+        queryset = super(AdvertisementViewSet, self).get_queryset()
+        user = self.request.user
+        if isinstance(user, AnonymousUser):
+            return queryset.exclude(status='DRAFT')
+        return queryset.exclude(Q(status='DRAFT') & ~Q(creator=user))
 
     # def get_permissions(self):
     #     """Получение прав для действий."""
