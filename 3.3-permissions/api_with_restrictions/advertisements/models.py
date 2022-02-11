@@ -29,4 +29,20 @@ class Advertisement(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='advertisements',
+                                   through='Favourites',)
 
+
+class Favourites(models.Model):
+    advertisement = models.ForeignKey(
+        Advertisement,
+        db_column='advertisement',
+        on_delete=models.CASCADE,
+        related_name='favourites',
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        db_column='user',
+        on_delete=models.CASCADE,
+        related_name='favourites',
+    )

@@ -8,5 +8,5 @@ class IsAuthenticatedOrOwnerOrReadOnly(BasePermission):
         if method in SAFE_METHODS:
             return True
         elif method == 'POST':
-            return user == user.is_authenticated
-        return user == user.is_staff or user == obj.creator
+            return user.is_authenticated
+        return user.is_staff or user == obj.creator

@@ -1,17 +1,26 @@
 # примеры API-запросов
 
-@baseUrl = https://localhost:8000/api
-
+@baseUrl = http://localhost:8000/api
+@tokenA1 = Token a4b02bc7a3273ced15b820ea3e6523167c94bac4
+@tokenA2 = Token 408ffc282e844e53cea6d714c3553bf81827a6c4
+@tokenU1 =Token 8a482cf83878e17a285679d9dc6db7b2d01c99bb
 # получение объявлений
 GET {{baseUrl}}/advertisements/
 Content-Type: application/json
 
 ###
 
+# получение объявлений
+GET {{baseUrl}}/advertisements/
+Content-Type: application/json
+Authorization: {{tokenU1}}
+
+###
+
 # создание объявления
 POST {{baseUrl}}/advertisements/
 Content-Type: application/json
-Authorization: Token 902ef055a9ac93f18327f1f9c45ab059f1a62c7d
+Authorization: {{tokenU1}}
 
 {
   "title": "Шкаф IKEA",
@@ -23,7 +32,7 @@ Authorization: Token 902ef055a9ac93f18327f1f9c45ab059f1a62c7d
 # попытка поменять объявление
 PATCH {{baseUrl}}/advertisements/1/
 Content-Type: application/json
-Authorization: Token 902ef055a9ac93f18327f1f9c45ab059f1a62c7d
+Authorization: {{tokenA1}}
 
 {
   "status": "CLOSED"
@@ -38,5 +47,55 @@ Content-Type: application/json
 ###
 
 # фильтрация по дате
-GET {{baseUrl}}/advertisements/?created_at_before=2020-10-01
+GET {{baseUrl}}/advertisements/?created_at_before=2022-02-09
+Content-Type: application/json
+
+###
+
+# Удаление объявления
+DELETE  {{baseUrl}}/advertisements/11/
+Content-Type: application/json
+Authorization: {{tokenU1}}
+
+{
+  "title": "Шкаф IKEA",
+  "description": "Срочно"
+}
+
+###
+
+# Удаление объявления
+DELETE  {{baseUrl}}/advertisements/1/
+Content-Type: application/json
+Authorization: {{tokenA1}}
+
+{
+  "title": "Шкаф IKEA",
+  "description": "Срочно"
+}
+
+###
+
+# добавление в избранное
+POST {{baseUrl}}/advertisements/12/favourites/
+Content-Type: application/json
+
+###
+
+# добавление в избранное
+POST {{baseUrl}}/advertisements/28/favourites/
+Content-Type: application/json
+Authorization: {{tokenA1}}
+
+###
+
+# список избранных
+GET {{baseUrl}}/advertisements/favourites/
+Content-Type: application/json
+Authorization: {{tokenA1}}
+
+###
+
+# список избранных
+GET {{baseUrl}}/advertisements/favourites/
 Content-Type: application/json

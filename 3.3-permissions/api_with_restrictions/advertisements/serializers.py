@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from advertisements.models import Advertisement
+from advertisements.models import Advertisement, Favourites
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,7 +24,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertisement
         fields = ('id', 'title', 'description', 'creator',
-                  'status', 'created_at')
+                  'status', 'created_at',)
 
     def create(self, validated_data):
         """Метод для создания"""
@@ -48,3 +48,19 @@ class AdvertisementSerializer(serializers.ModelSerializer):
                 raise ValidationError('Досигнуто максимальное колличество открытых объявлений.\n'
                                       'Для размещения обьявления необходимо закрыть одно  из преждних открытых')
         return data
+
+
+class FavouritesSerializer(serializers.ModelSerializer):
+    """Serializer для избранного."""
+
+    class Meta:
+        model = Favourites
+        fields = ('user', 'advertisement',)
+
+    def validate(self, data):
+        """Метод для валидации. Вызывается при создании и обновлении."""
+        if Advertisement.objects.get(id=data.get('advertisement').id).creator == data.get('user'):
+            raise ValidationError('Свои обьявления добавлять в избранное нельзя.')
+        return data
+
+
