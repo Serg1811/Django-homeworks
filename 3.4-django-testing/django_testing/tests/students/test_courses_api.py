@@ -2,7 +2,6 @@ import random
 import string
 import pytest
 
-from pprint import pprint
 from rest_framework.test import APIClient
 from model_bakery import baker
 from students.models import Student, Course
